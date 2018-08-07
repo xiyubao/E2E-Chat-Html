@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">  
+<html xmlns="http://www.w3.org/1999/xhtml">  
+<head>  
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />  
+<script src="http://www.w3school.com.cn/jquery/jquery-1.11.1.min.js"></script>  
+
+<script src='https://www.totmob.com/nearbytes/plugin/js-fl/NearBytes.js' type='text/javascript' charset='utf-8'></script>
+<meta name="renderer" content="webkit">  
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>  
+<title>SDS</title>  
+
+</head>  
+
+<body onload="initNearBytes()">  
+<div align="center" style="color: green" id="top">---------------消息记录----------------</div>  
+<div align="center" id="list"></div>  
+<div align="center" id="list2"></div>  
+<div align="center" style="color: green" id="bottom">---------------消息记录----------------</div>  
+<div align="center">  
+      <textarea name="textarea" cols="45" rows="10" readonly="readonly" id="textarea" style="overflow:scroll;overflow-x:hidden"></textarea><br/>  
+            
+                  Username：   
+      <input width="10" type="text" name="username" id="sendmsg"/>  
+      </div>
+      <div align="center">  
+      			Password:
+               
+<input width="10" type="password" name="password" id="sendmsg"/>  
+      </div>
+      <div align="center">  
+      
+      <input width="50" type="button" name="button" id="button" onclick="login()" value=" Login " />  
+      <input width="50" type="button" name="button" id="button" onclick="register()" value=" Register " />  
+      <br/><br/><br/>
+</div>  
+
+</body>  
+  
+</html>  
+
+<script type="text/javascript">  
+	
+	var locate_time =0;
+
+	
+	var ip ="111.231.57.188";
+	var port = "8887";
+
+    var webSocket=new WebSocket("ws://"+ip+":"+port);  
+   
+    webSocket.onerror = function(event) {  
+       alert(event.data);  
+    };  
+   
+    webSocket.onopen = function(event) {  
+      document.getElementById("list").innerHTML+="connecting to "+ip+"/"+port+"\n"; 
+    };  
+   
+    webSocket.onmessage = function(event) {  
+		
+	
+      document.getElementById("textarea").innerHTML+=gettimestamp()+" get "+"\""+event.data+"\""+" from "+ip+"\n";
+	  textarea.scrollTop = textarea.scrollHeight;
+	  
+	 
+    };  
+ 
+	   
+	  
+    function sendMessage() {  
+      var msg=document.getElementById("sendmsg").value;
+	mLux = msg;
+      //document.getElementById("textarea").innerHTML+=gettimestamp()+" send "+"\""+msg+"\""+" to "+ip+"\n"; 
+     // webSocket.send(msg);  
+	  textarea.scrollTop = textarea.scrollHeight;
+    }  
+	
+	
+	
+	function Send(username,password){
+		
+		 document.getElementById("textarea").innerHTML+=gettimestamp()+" send "+"\""+username+"\""+" to "+ip+"\n"; 
+		webSocket.send("web@"+username+"#"+password);
+		textarea.scrollTop = textarea.scrollHeight;
+	}
+	
+
+	
+	function gettimestamp(){
+		var currentDate = new Date();  
+		var timestamp ="";
+		
+		var hour = currentDate.getHours();
+		if(hour<10)
+			timestamp += "0";
+		timestamp += hour+":";
+			
+		var minute = currentDate.getMinutes();
+		if(minute<10)
+			timestamp += "0";
+		timestamp += minute+":";
+		
+		var second = currentDate.getSeconds();
+		if(second<10)
+			timestamp += "0";
+		timestamp += second+":";
+		
+		var millisecond = currentDate.getMilliseconds();
+		if(millisecond<100)
+			timestamp += "0"+millisecond;
+		else
+			timestamp += millisecond;
+			
+		return timestamp;
+	}
+	
+	
+	function login()
+	{
+		var username=document.getElementById("username").value;
+		var password=document.getElementById("password").value;
+		Send(username,password);
+	}
+   
+	function register()
+	{
+		var username=document.getElementById("username").value;
+		var password=document.getElementById("password").value;
+		Send(username,password);
+	}
+	
+	
+ </script>  
